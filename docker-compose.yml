@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        working_dir: /var/www/html
+        volumes:
+            - .:/var/www/html
+            - /var/www/html/vendor
+            - /var/www/html/node_modules
+        depends_on:
+            mysql:
+                condition: service_healthy
+        networks:
+            - laravel
+        environment:
+            - DB_HOST=${DB_HOST}
+            - DB_DATABASE=${DB_DATABASE}
+            - DB_USERNAME=${DB_USERNAME}
+            - DB_PASSWORD=${DB_PASSWORD}
+        restart: unless-stopped
+        ports:
+            - "8000:8080"
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8080/up"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 40s
+
+    mysql:
+        image: mysql:5.7
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+        ports:
+            - "3306:3306"
+        networks:
+            - laravel
+        volumes:
+            - dbdata:/var/lib/mysql
+        healthcheck:
+            test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p${DB_PASSWORD} && mysql -u root -p${DB_PASSWORD} -e 'SELECT 1;'"]
+            interval: 10s
+            timeout: 5s
+            retries: 10
+            start_period: 30s
+        restart: unless-stopped
+
+    mailhog:
+        build: ./mailhog
+        logging:
+            driver: 'none'
+        restart: unless-stopped
+        ports:
+            - "9001:8025"
+            - "1025:1025"
+        networks:
+            - laravel
+        healthcheck:
+            test: ["CMD", "nc", "-z", "localhost", "1025"]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+
+networks:
+    laravel:
+        driver: bridge
+
+volumes:
+    dbdata:
+        driver: local
