@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\OnlyAlphaNumericAndPlusMinAllowed;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateFacilityRequest extends FormRequest
@@ -23,7 +22,7 @@ class UpdateFacilityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:255', new OnlyAlphaNumericAndPlusMinAllowed()],
+            'name' => ['sometimes', 'string', 'max:255'],
             'location_id' => ['sometimes', 'exists:locations,id'],
             'tags' => ['sometimes', 'array'],
             'tags.*' => ['exists:tags,id'],

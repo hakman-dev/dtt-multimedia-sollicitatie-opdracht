@@ -24,7 +24,7 @@ class FacilityController extends Controller
 
     public function store(StoreFacilityRequest $request): FacilityResource
     {
-        $facility = Facility::create($request->validated());
+        $facility = Facility::create(array_map('sanitizeInput', $request->validated()));
 
         if ($request->has('tags')) {
             $facility->tags()->sync($request->tags);
@@ -44,7 +44,7 @@ class FacilityController extends Controller
 
     public function update(UpdateFacilityRequest $request, Facility $facility): FacilityResource
     {
-        $facility->update($request->validated());
+        $facility->update(array_map('sanitizeInput', $request->validated()));
 
         if ($request->has('tags')) {
             $facility->tags()->sync($request->tags);
