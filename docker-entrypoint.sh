@@ -2,7 +2,6 @@
 # Run Laravel migration and seed database
 echo "Running migrations and seeding the database..."
 php artisan migrate
-php artisan db:seed
 
 # Start php-fpm server on port 9000
 echo "Starting php-fpm server..."
