@@ -34,12 +34,15 @@ COPY . /var/www/html
 # Copy existing application directory permissions
 COPY --chown=www-data:www-data . /var/www/html
 
+
 RUN composer install
 RUN npm install && npm run build
 
 
 RUN chown -R www-data:www-data /var/lib/nginx
 RUN chown -R www-data:www-data /var/log/nginx
+
+RUN chmod -R 775 /var/www/html/storage
 
 # Copy NGINX config into container
 COPY www.conf /usr/local/etc/php-fpm.d/www.conf
