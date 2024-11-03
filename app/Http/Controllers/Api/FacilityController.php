@@ -17,7 +17,7 @@ class FacilityController extends Controller
 {
     public function index(): FacilityCollection
     {
-        $facilities = Facility::with(['location', 'tags'])->latest()->paginate();
+        $facilities = Facility::with(['location', 'tags', 'employees'])->latest()->paginate();
 
         return new FacilityCollection($facilities);
     }
@@ -30,14 +30,14 @@ class FacilityController extends Controller
             $facility->tags()->sync($request->tags);
         }
 
-        $facility->load(['location', 'tags']);
+        $facility->load(['location', 'tags', 'employees']);
 
         return new FacilityResource($facility);
     }
 
     public function show(Facility $facility): FacilityResource
     {
-        $facility->load(['location', 'tags']);
+        $facility->load(['location', 'tags', 'employees']);
 
         return new FacilityResource($facility);
     }
@@ -50,7 +50,7 @@ class FacilityController extends Controller
             $facility->tags()->sync($request->tags);
         }
 
-        $facility->load(['location', 'tags']);
+        $facility->load(['location', 'tags', 'employees']);
 
         return new FacilityResource($facility);
     }
@@ -64,7 +64,7 @@ class FacilityController extends Controller
 
     public function search(SearchFacilityRequest $request): FacilityCollection
     {
-        $facilities = Facility::with(['location', 'tags'])
+        $facilities = Facility::with(['location', 'tags', 'employees'])
             ->when($request->filled('facility_name'), function (Builder $query) use ($request) {
                 $query->where('name', 'like', "%{$request->facility_name}%");
             })
@@ -76,6 +76,11 @@ class FacilityController extends Controller
             ->when($request->filled('tag'), function (Builder $query) use ($request) {
                 $query->whereHas('tags', function (Builder $tagQuery) use ($request) {
                     $tagQuery->where('name', 'like', "%{$request->tag}%");
+                });
+            })
+            ->when($request->filled('employee_name'), function (Builder $query) use ($request) {
+                $query->whereHas('employees', function (Builder $tagQuery) use ($request) {
+                    $tagQuery->where('name', 'like', "%{$request->employee_name}%");
                 });
             })
             // User Story 3 didnt include a general search, so i added it anyways since it was not really extra time.

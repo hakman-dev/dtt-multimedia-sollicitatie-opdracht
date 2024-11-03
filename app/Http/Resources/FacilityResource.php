@@ -19,6 +19,7 @@ class FacilityResource extends JsonResource
             'name' => $this->name,
             'location' => new LocationResource($this->whenLoaded('location')),
             'tags' => TagResource::collection($this->whenLoaded('tags')),
+            'employees' => EmployeeResource::collection($this->whenLoaded('employees')),
             'created_at' => $this->created_at->toISOString(),
             'updated_at' => $this->updated_at->toISOString(),
         ];

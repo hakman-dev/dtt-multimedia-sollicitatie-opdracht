@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             LocationSeeder::class,
             TagSeeder::class,
             FacilitySeeder::class,
+            EmployeeSeeder::class
         ]);
     }
 }
