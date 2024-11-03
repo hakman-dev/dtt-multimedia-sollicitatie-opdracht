@@ -22,7 +22,7 @@ Public routes can be accessed without authentication:
 
 ## Using Secured API Routes with Postman
 1. Register via an API call (refer to the Postman collection under 'Auth/Register').
-2. Retrieve the `access_token` from the response and save it in Postman's DTT configuration.
+2. Retrieve the `access_token` from the response and save it in Postman's DTT variables.
 3. You can now use the create, update, and delete routes.
 
 ## Additional Resources
