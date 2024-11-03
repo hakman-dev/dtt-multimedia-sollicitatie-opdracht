@@ -59,7 +59,7 @@ class FacilityController extends Controller
     {
         $facility->delete();
 
-        return response()->json(null, ResponseAlias::HTTP_OK);
+        return response()->json(null, ResponseAlias::HTTP_NO_CONTENT);
     }
 
     public function search(SearchFacilityRequest $request): FacilityCollection
@@ -68,9 +68,9 @@ class FacilityController extends Controller
             ->when($request->filled('facility_name'), function (Builder $query) use ($request) {
                 $query->where('name', 'like', "%{$request->facility_name}%");
             })
-            ->when($request->filled('city'), function (Builder $query) use ($request) {
+            ->when($request->filled('location'), function (Builder $query) use ($request) {
                 $query->whereHas('location', function (Builder $locationQuery) use ($request) {
-                    $locationQuery->where('city', 'like', "%{$request->city}%");
+                    $locationQuery->where('city', 'like', "%{$request->location}%");
                 });
             })
             ->when($request->filled('tag'), function (Builder $query) use ($request) {
