@@ -1,4 +1,4 @@
-# README
+⚠️ Important Notice: This is a technical assessment from DTT Multimedia that is commonly sent to job applicants. Be aware that despite the significant time investment required (approximately 20 hours), the company often does not provide feedback or follow-up communication after submission.
 
 ## Initial Setup
 To start the application for the first time:
